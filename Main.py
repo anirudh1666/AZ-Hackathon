@@ -47,7 +47,29 @@ def run():
     car_entry.pack()
     user.set_car_dist(car_entry.get())
 
+    train_label = tk.Label(text="Enter distance travelled by train")
+    train_entry = tk.Entry(fg="black", bg="white", width=50)
+    train_label.pack()
+    train_entry.pack()
+    user.set_train_dist(train_entry.get())
 
+    bus_label = tk.Label(text="Enter distance travelled by bus")
+    bus_entry = tk.Entry(fg="black", bg="white", width=50)
+    bus_label.pack()
+    bus_entry.pack()
+    user.set_bus_dist(bus_entry.get())
+
+    electricity_label = tk.Label(text="Enter electricity usage")
+    electricity_entry = tk.Entry(fg="black", bg="white", width=50)
+    electricity_label.pack()
+    electricity_entry.pack()
+    user.set_electricity(electricity_entry.get())
+
+    gas_label = tk.Label(text="Enter gas usage")
+    gas_entry = tk.Entry(fg="black", bg="white", width=50)
+    gas_label.pack()
+    gas_entry.pack()
+    user.set_gas(gas_entry.get())
     user.calculate()
 
 run()
