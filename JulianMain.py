@@ -9,7 +9,9 @@ class User:
         self.__dist_by_bus = None
         self.__electricity_use = None
         self.__gas_use = None
-
+        self.calc_label = tk.Label(gui, text="", fg="black", bg="white")
+        self.calc_label.pack()
+        
     def set_car_dist(self, car_dist):
 
         self.__dist_by_car = car_dist
@@ -32,11 +34,11 @@ class User:
 
     def calculate(self, text_output):
         if text_output != "No Error":
-            calc_label = tk.Label(gui, text=text_output, fg="black", bg="red")
-            calc_label.pack()
+            self.calc_label.configure(text=text_output, fg="black", bg="red")
+            self.calc_label.pack()
         else: #Replace the else statement so that the text = the calculation
-            calc_label = tk.Label(gui, text="REPLACE", fg="black", bg="white")
-            calc_label.pack()
+            self.calc_label.configure(text="REPLACE", fg="black", bg="white")
+            self.calc_label.pack()
 
 
 gui = tk.Tk()
@@ -113,12 +115,6 @@ def run():
         user.set_bus_dist(b)
         user.set_electricity(e)
         user.set_gas(g)
-        
-        print(c)
-        print(t)
-        print(b)
-        print(e)
-        print(g)
         
         user.calculate("No Error")
 
