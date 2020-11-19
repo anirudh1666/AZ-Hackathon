@@ -1,25 +1,22 @@
 import tkinter as tk
 
 def car_footprint(miles):
-    return miles*728/(1500*1000)
-
-def walk_footprint(miles):
-    return 0*miles
+    return int(miles)*728/(1500*1000)
 
 #14g per passenger mile for train
 def train_footprint(miles):
-    return 14/(1000*1000)*miles
+    return 14/(1000*1000)*int(miles)
 
 #80g per passenger mile for bus
 def bus_footprint(miles):
-    return 80/(1000*1000)*miles
+    return 80/(1000*1000)*int(miles)
 
 #0.256 kg of CO2 per kWh of electricity and 0.184kg per kWh of gas.
 def elec_footprint(kwh):
-    return 0.256*kwh/1000
+    return 0.256*int(kwh)/1000
 
 def gas_footprint(kwh):
-    return 0.184*kwh/1000
+    return 0.184*int(kwh)/1000
 
 
 class User:
@@ -32,7 +29,7 @@ class User:
         self.__electricity_use = None
         self.__gas_use = None
         self.calc_label = tk.Label(gui, text="", fg="black", bg="white")
-        self.calc_label.pack()
+        
         
     def set_car_dist(self, car_dist):
 
@@ -60,13 +57,15 @@ class User:
             self.calc_label.pack()
         else: #Replace the else statement so that the text = the calculation
             print(self)
-            c = car_footprint(car_dist)
-            self.calc_label.configure(text=c, fg="black", bg="white")
+            c = car_footprint(self.__dist_by_car) + train_footprint(self.__dist_by_train) + bus_footprint(self.__dist_by_bus) + elec_footprint(self.__electricity_use) + gas_footprint(self.__gas_use)
+            footprint = "Carbon footprint per month: " + str(round(c*1000, 3)) + " kg"
+            self.calc_label.configure(text=footprint, fg="black", bg="white")
             self.calc_label.pack()
+
+            return c
 
 
 gui = tk.Tk()
-user = User()
 
 def isIntFormat(a):
     try:
@@ -140,38 +139,50 @@ def run():
         user.set_electricity(e)
         user.set_gas(g)
         
-        user.calculate("No Error")
+        footprint = user.calculate("No Error")
+        over_year = footprint * 12
+        avg_label = tk.Label(gui, text="", fg="black", bg="white")
+        if over_year > 4:
+            avg_label.configure(text="Your carbon footprint is above the average, try to reduce it!", fg="black", bg="white")
+            avg_label.pack()
+        else:
+            avg_label.configure(text="Your carbon footprint is below the average, good job!", fg="black", bg="white")
+            avg_label.pack()
+        
     
     title_label = tk.Label(gui, text="Calculate your monthly carbon footprint")
     title_label.pack()
-
-    car_label = tk.Label(gui, text="Enter distance travelled by car in miles")
+    
+    car_label = tk.Label(gui, text="Enter distance travelled by car to the nearest mile.")
     car_entry = tk.Entry(gui, fg="black", bg="white", width=50)
     car_label.pack()
     car_entry.pack()
 
-    train_label = tk.Label(gui, text="Enter distance travelled by train in miles")
+    train_label = tk.Label(gui, text="Enter distance travelled by train to the nearest mile.")
     train_entry = tk.Entry(gui, fg="black", bg="white", width=50)
     train_label.pack()
     train_entry.pack()
 
-    bus_label = tk.Label(gui, text="Enter distance travelled by bus in miles")
+    bus_label = tk.Label(gui, text="Enter distance travelled by bus to the nearest mile.")
     bus_entry = tk.Entry(gui, fg="black", bg="white", width=50)
     bus_label.pack()
     bus_entry.pack()
 
-    electricity_label = tk.Label(gui, text="Enter electricity usage (cost)")
+    electricity_label = tk.Label(gui, text="Enter electricity usage to the nearest kWh per person in your household.")
     electricity_entry = tk.Entry(gui, fg="black", bg="white", width=50)
     electricity_label.pack()
     electricity_entry.pack()
 
-    gas_label = tk.Label(gui, text="Enter gas usage (cost)")
+    gas_label = tk.Label(gui, text="Enter gas usage to the nearest kWh per person in your household.")
     gas_entry = tk.Entry(gui, fg="black", bg="white", width=50)
     gas_label.pack()
     gas_entry.pack()
 
-    b = tk.Button(gui, text="Done", command=checkAll)
+    b = tk.Button(gui, text="Calculate", command=checkAll)
     b.pack()
+
+    user = User()
+    avg_label = tk.Label(gui, text="", fg="black", bg="white")
     
 
 run()
